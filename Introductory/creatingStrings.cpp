@@ -71,31 +71,70 @@ ll STOI(string s) {
         po *= 10; 
     } 
     return num; 
-} 
+}
 
-void torresHanoi(ll n, ll inicio, ll intermedio, ll destino) {
-    //Primero hacemos el caso base
-    if (n == 1) {//Nos movemos de la casilla inicio a la destino
-        cout << inicio << " " << destino << "\n";
-    } else { //Acá tenemos que reducir el problema de las torres de hanoi de n a n - 1, tal que se resuelve para el caso intermedio
-        torresHanoi(n - 1, inicio, destino, intermedio);
-        //Luego tenemos que mover la casilla que estába en el inicio al destino
-        cout << inicio << " " << destino << "\n";
-        torresHanoi(n - 1, intermedio, inicio, destino);
-        //Tn = 2Tn-1 + 1
-        //Tn = 2^n - 1
+ll factorial(ll n) {
+    if (n == 0) {
+        return 1;
+    }
+
+    ll result = n;
+    per(i, n - 1, 1) {
+        result*= i;
+    }
+    return result;
+}
+
+void crearString(ll actual, string s, ll n, vector<ll> used, string res) {
+    if (actual == n) {
+        cout << res << "\n";
+    } else {
+        vector<ll> letters(27, 0); 
+        rep(i, 0, n - 1) {
+            if (!(used[i]) && letters[s[i] - 'a'] == 0) {
+                used[i] = 1;
+                letters[s[i] - 'a'] += 1;
+                crearString(actual + 1, s, n, used, res + s[i]);
+                used[i] = 0;
+            }
+        }
     }
 }
+
 
 int main() { 
     SPEED; 
     cout.precision(8); 
     cout << fixed;
-
     //Solución
-    ll n;
-    cin >> n;
-    cout << (ll)pow(2, n) - 1 << "\n";
-    torresHanoi(n, 1, 2, 3);
+
+    string s;
+    cin >> s;
+    ll n = s.le();
+    vector<ll> letters(27, 0); //Iniciamos 27 casillas que es el alfabeto inglés inicializados con 0
+    rep(i, 0, n -1) {
+        letters[s[i] - 'a'] += 1; //añadimos 1 al contador por cada letra del string pasado
+    }
+    ll denom = 1;
+    string sr = "";
+    rep(i, 0, 26) {
+        ll letter = letters[i];
+        rep(j, 1, letter) {
+            sr += (char)(i + 'a');
+        }
+        if (letter == 0) {
+            continue;
+        } else {
+            denom *= factorial(letter);
+        }
+    }
+    ll perms = factorial(n)/denom;
+    cout << perms << "\n";
+
+    //Tenemos que generar todas las strings
+    //backtracking
+
+    //Fuerza bruta cortando las ramas
+    crearString(0, sr, n, vector<ll>(n, 0), "");
     return 0; 
 } 
