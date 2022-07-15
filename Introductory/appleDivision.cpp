@@ -24,7 +24,9 @@ using namespace std;
 const ll N = 3e5 + 5; 
 const ll MAX = 3e5 + 5; 
 const ll M = 1e6 + 5; 
-const int mod = 1e18 + 7; 
+const int mod = 1e18 + 7;
+ll minDiference;
+vector<ll> applesSet;
 ll MODULAR_POWER(ll a , ll b , ll MOD) { 
     if(b == 0) return 1LL; 
     ll d = MODULAR_POWER(a , b / 2 , MOD); 
@@ -72,27 +74,41 @@ ll STOI(string s) {
     } 
     return num; 
 } 
-int main() { 
-    SPEED; 
+ 
+void findMinSum(ll actualSum, ll totalSum, ll n, vector<ll> *applesP , ll k) {
+    if (k == n) {
+        ll newSetC = totalSum - actualSum;
+        ll newDiff = abs(newSetC - actualSum);
+        if (newDiff < minDiference) {
+            minDiference = newDiff;
+        }
+    } else {
+        ll apple = (*applesP)[k];
+        findMinSum(actualSum, totalSum, n, applesP, k + 1);
+        applesSet.push_back(apple);
+        findMinSum(actualSum + apple, totalSum, n, applesP, k + 1);
+        applesSet.pop_back();
+    }
+}
+ 
+int main() {
+    SPEED;
     cout.precision(8); 
     cout << fixed;
-
+ 
     ll n, appleCounter = 0;
     cin >> n;
-    vector<ll> apples(n);
+    vector<ll> apples(n), applesSet = vector<ll>(n);
     rep(i, 0, n - 1) { //Guardamos las manzanas en un vector
         cin >> apples[i];
-        appleCounter += apples[i]; 
+        appleCounter += apples[i];
     }
-    sort(apples.begin(), apples.end());
-    //Vamos añadiendo de al final y al principio alternando, sólo cuando la diferencia entre la suma del conjunto
-    //actual con la del complemento sea mayor a la del actual, paramos, o bien, probamos con los números más bajos
-
-    ll setSum = 0, minDiference = apples[l], l = 0, r = n -1; //Punteros del inicio y el final y contador
-    while(true) {
-        if ( ) {
-        }
-    }
-
+ 
+    minDiference = appleCounter;
+    //Vamos a crear todas las combinaciones pero cortar las que empiezan a generar una diferencia mayor
+    //backtracking
+    findMinSum(0, appleCounter, n, &apples, 0);
+    cout << minDiference << "\n";
+ 
     return 0; 
 } 
