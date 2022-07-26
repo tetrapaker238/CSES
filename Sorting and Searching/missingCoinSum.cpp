@@ -19,5 +19,31 @@ int main() {
     for(ll i = 0; i < n; i++) {
         cin >> coins[i];
     }
-    return 0; 
+
+    sort(coins.begin(), coins.end());
+
+    if (coins[0] > 1) {
+        cout << 1;
+    } else {
+        ll lastPS = 1;
+        ll minPS = lastPS + 1;
+        ll complement;
+        for(ll i = 1; i < n; i++) {
+            if (coins[i] == minPS) {
+                lastPS += coins[i];
+                minPS = lastPS + 1;
+            } else {
+                complement = minPS - coins[i];
+                if (complement < 0) {
+                    cout << minPS;
+                    return 0;
+                } else {
+                    lastPS += coins[i];
+                    minPS = lastPS + 1;
+                }
+            }
+        }
+        cout << minPS;
+    }
+    return 0;
 } 
