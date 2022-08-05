@@ -14,13 +14,40 @@ int main() {
     cout << fixed;
     ll n, x;
     cin >> x >> n;
-    vector<ll> street(n, 0);
-    ll trafficLight, longestPath;
-    for (ll i = 0; i < n; i++) {
+    ll trafficLight;
+    set<ll> trafficLights;
+    trafficLights.insert(0);
+    trafficLights.insert(x);
+    multiset<ll> pathLengths;
+    pathLengths.insert(x);
+
+    for (ll i = 0; i < n - 1; i++) {
         cin >> trafficLight;
-        //process traffic Light
-        cout << longestPath << "\n";
+        auto it = trafficLights.insert(trafficLight);
+        auto prevIt = prev(it.first, 1);
+        auto nextIt = next(it.first, 1);
+        ll nextVal = *nextIt;
+        ll prevVal = *prevIt;
+        ll originalLenght = nextVal - prevVal;
+        pathLengths.erase(pathLengths.find(originalLenght));
+        pathLengths.insert(nextVal - trafficLight);
+        pathLengths.insert(trafficLight - prevVal);
+        auto lastPath = prev(pathLengths.end(), 1);
+        cout << (*lastPath) << " ";
     }
+
+    cin >> trafficLight;
+    auto it = trafficLights.insert(trafficLight);
+    auto prevIt = prev(it.first, 1);
+    auto nextIt = next(it.first, 1);
+    ll nextVal = *nextIt;
+    ll prevVal = *prevIt;
+    ll originalLenght = nextVal - prevVal;
+    pathLengths.erase(pathLengths.find(originalLenght));
+    pathLengths.insert(nextVal - trafficLight);
+    pathLengths.insert(trafficLight - prevVal);
+    auto lastPath = prev(pathLengths.end(), 1);
+    cout << (*lastPath);
 
     return 0; 
 } 
